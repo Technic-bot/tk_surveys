@@ -35,6 +35,13 @@ cols += ["sundays", "colors", "merch", "picarto", "commision", "fan_art"]
 
 col_remap = dict(zip(raw_cols, cols))
 
+extra_maps = {
+  'Do you participate in other Twokinds fan communities (Discord server, reddit, forums, etc)?' : 'other_comms',
+  "How long have you been part of this server? (in years)" : "reddit"
+  }
+
+col_remap.update(extra_maps)
+
 gender_renames = {"Male": "Cisgender Male"}
 orig_renames = {
     "Latin America and the Caribbean": "Latin America",

@@ -1,12 +1,12 @@
 pie_graphs = ( 
   ("gender","Gender Distribution"),
   ("sex","Sexual Orientation"),
-  ("comms","Are you part of other Twokinds communities?"),
-  ("furry","Do you consider yoursel a furry?"),
-  ("merch", "Do you own any Twokinds merch?"), 
+  ("other_comms","Are you part of other Twokinds communities?"),
+  ("furry","Do you consider yourself a furry?"),
+  #("merch", "Do you own any Twokinds merch?"), 
   ("picarto", "Do you follow Tom on Picarto?"), 
   ("fan_art", "Have you ever made Twokinds fan art?"), 
-  ("commision", "Have you ever commision Twokinds art?")
+  ("commision", "Have you ever commisioned Twokinds art?")
 )
 
 bar_graphs = (
@@ -19,14 +19,15 @@ bar_graphs = (
 )
 
 histograms = (
+  ("age","Age Distribution",'years'),
   ('follow','Time following Twokinds','years'),
-  ('reddit','Time on r/Twokinds','years')
+  ('reddit','Time following TK GC','years'),
+  ('comms','Time spent on Tk communities in general','years'),
+  ('fav_chap','Favorite Chapter','chapter'),
+  ('unfav_chap','Least Favorite Chapter','chapter')
 )
 
 bar_order_keys = (
-  ('fav_chap','Favorite Chapter'),
-  ('unfav_chap','Least Favorite Chapter'),
-  ('fav_chap','Favorite Chapter'),
   ('patreon','Are you a Patreon'),
   ('desired_patreon','Which Patreon tier would you subscribe if money was not an issue?'),
   ('sundays','How do you feel about Sunday Sketches?'),
