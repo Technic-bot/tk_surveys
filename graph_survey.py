@@ -81,7 +81,7 @@ def graph_hist(df, col, title, label):
     return fig
 
 
-def graph_bar(df, col, title, other_n=1, crop=0):
+def graph_bar(df, col, title, other_n=2, crop=0):
 
     if other_n:
         others = df[col].value_counts()[df[col].value_counts() < other_n]

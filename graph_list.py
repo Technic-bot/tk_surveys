@@ -21,7 +21,7 @@ bar_graphs = (
 histograms = (
   ("age","Age Distribution",'years'),
   ('follow','Time following Twokinds','years'),
-  ('reddit','Time following TK GC','years'),
+  ('reddit','Time following r/twokinds','years'),
   ('comms','Time spent on Tk communities in general','years'),
   ('fav_chap','Favorite Chapter','chapter'),
   ('unfav_chap','Least Favorite Chapter','chapter')
