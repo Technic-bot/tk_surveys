@@ -1,7 +1,7 @@
 pie_graphs = ( 
   ("gender","Gender Distribution"),
   ("sex","Sexual Orientation"),
-  ("other_comms","Are you part of other Twokinds communities?"),
+  ("other_communities","Are you part of other Twokinds communities?"),
   ("furry","Do you consider yourself a furry?"),
   #("merch", "Do you own any Twokinds merch?"), 
   ("picarto", "Do you follow Tom on Picarto?"), 
@@ -15,16 +15,17 @@ bar_graphs = (
   ('job','Employment status'),
   ('fav_char','Favorite Character'),
   ('unfav_char','Least Favorite Character'),
-  ('fav_race','Favorite Race')
+  ('fav_race','Favorite Race'),
 )
 
 histograms = (
   ("age","Age Distribution",'years'),
   ('follow','Time following Twokinds','years'),
-  ('reddit','Time following r/twokinds','years'),
-  ('comms','Time spent on Tk communities in general','years'),
-  ('fav_chap','Favorite Chapter','chapter'),
-  ('unfav_chap','Least Favorite Chapter','chapter')
+  ('current_community_stay','Time following r/twokinds','years'),
+  ('current_community_stay','Time in TKGC','years'),
+  ('other_community_stay','Time spent on Tk communities in general','years'),
+  ('unfav_chap','Least Favorite Chapter','chapter'),
+  ('fav_chap','Favorite Chapter', 'chapter'),
 )
 
 bar_order_keys = (

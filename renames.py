@@ -7,10 +7,11 @@ raw_cols = (
     "Education",
     "Employment",
     "Favorite character",
-    "Least Favorite character",
+    "Least Favorite Character",
     "Favorite race",
     "How long have you been following the comic? (in years)",
-    "How long have you been part of r/Twokinds? (in years)",
+    #"How long have you been part of r/Twokinds? (in years)",
+    "How long have you been part of TKGC? (in years)",
     "Do you participate in other Twokinds fan communities (Discord, forums, etc)?",
     "In general, how long have you been a part of Twokinds fan communities? (In years)",
     "Do you identify as a furry or a member of the furry fandom?",
@@ -28,7 +29,7 @@ raw_cols = (
 
 cols = ["time", "age", "gender", "sex", "origin", "edu", "job"]
 cols += ["fav_char", "unfav_char", "fav_race"]
-cols += ["follow", "reddit", "other_comms", "comms"]
+cols += ["follow", "current_community_stay", "other_communities", "other_community_stay"]
 cols += ["furry"]
 cols += ["fav_chap", "unfav_chap", "patreon", "desired_patreon"]
 cols += ["sundays", "colors", "merch", "picarto", "commision", "fan_art"]
@@ -49,25 +50,10 @@ orig_renames = {
 }
 
 char_renames = {
-    "Kat": "Kathrin",
-    "Kathrin Vaug": "Kathrin",
-    "Nat": "Natani",
-    "Maddie": "Madelyn",
     "Madelyn (Maddie)": "Madelyn",
-    "Keitj": "Keith",
-    "keith": "Keith",
-    "King Adelaide": "Adelaide",
-    "King Jade Adelaide": "Adelaide",
-    "Jade Adelaide": "Adelaide",
-    "Keith Keiser": "Keith",
-    "Database Error": "Red",
-    "Eric Vaughan": "Eric",
-    "Erik": "Eric",
-    "eric": "Eric",
-    "Alabaster the Elder": "Alabaster",
-    "Old goat": "Alabaster",
-    "Clovisssssssssssssssss": "Clovis",
-    "Randall (Master Architect)": "Randal",
+    "Mrs Nibbly": "Nibbly",
     "Don’t have one": "None",
+    "I don't know": 'None'
 }
+
 

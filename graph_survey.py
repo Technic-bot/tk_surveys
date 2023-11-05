@@ -36,7 +36,7 @@ def proc_opts():
 def graph_time(df):
     grp = pd.Grouper(key="time", freq="D")
     time_df = df.groupby(grp).count()
-    print(time_df["age"].sum())
+    #print(time_df["age"].sum())
 
     fig, axs = plt.subplots()
     axs.plot(time_df.index, time_df["age"])
@@ -50,8 +50,8 @@ def graph_time(df):
 def graph_age_hist(df):
     min_age = df["age"].min()
     max_age = df["age"].max()
-    print("Max age: {}".format(max_age))
-    print("Min age: {}".format(min_age))
+    #print("Max age: {}".format(max_age))
+    #print("Min age: {}".format(min_age))
     bins = np.arange(15, 70,5)
 
     fig, ax = plt.subplots()
@@ -67,12 +67,13 @@ def graph_age_hist(df):
 def graph_hist(df, col, title, label):
     min_col = df[col].min()
     max_col = df[col].max()
-    bins = np.arange(min_col, max_col)
-    print(min_col, max_col)
+    bins = np.arange(min_col, max_col+1)
+    #print(min_col, max_col+1)
 
     fig, ax = plt.subplots()
-    n = ax.hist(df[col], bins=bins, rwidth=0.8, align="mid", color="#72CDFE")
-    print(bins,n[0])
+    n = ax.hist(df[col], bins=bins, rwidth=0.8, align="left", color="#72CDFE")
+    #print(df.groupby(col).count()['time'])
+    #print(bins,n[0])
     ax.set_xticks(bins)
     ax.set_title(title)
     ax.set_xlabel(label)
@@ -84,12 +85,17 @@ def graph_hist(df, col, title, label):
 def graph_bar(df, col, title, other_n=2, crop=0):
 
     if other_n:
-        others = df[col].value_counts()[df[col].value_counts() < other_n]
+        # Find and replace all instances with count < other_n
+        # with 'Other'
+        vc = df[col].value_counts() 
+        others = vc[vc < other_n]
         df.loc[df[col].isin(others.index), col] = "Other"
 
     g_df = df.groupby(col).count()
     if crop:
+        # count instance per group crop anything wiuth at least "crop" times
         g_df = g_df[g_df["time"] > crop]
+
     g_df.sort_values(by="time", inplace=True, axis=0, ascending=False)
 
     fig, ax = plt.subplots(figsize=(6.4, 5.2))
@@ -122,10 +128,13 @@ def graph_bar_order_key(df, col, title, crop=1):
 
 
 def graph_pie(df, col, title, other_n=2):
-
     # othering
-    others = df[col].value_counts()[df[col].value_counts() < other_n]
-    df.loc[df[col].isin(others.index), col] = "other"
+    if other_n:
+        # Find and replace all instances with count < other_n
+        # with 'Other'
+        vc = df[col].value_counts() 
+        others = vc[vc < other_n]
+        df.loc[df[col].isin(others.index), col] = "Other"
 
     g_df = df.groupby(col).count()
     fig, ax = plt.subplots()
@@ -149,13 +158,16 @@ def preprocess(df):
     df["unfav_char"].replace(char_renames, inplace=True)
     df["fav_race"] = df["fav_race"].str.replace(r" \(.*\)", "", regex=True)
     df["patreon"] = df["patreon"].str.replace(r" \(.*\)", "", regex=True)
+    return
 
 def proc_merch(df):
   # Merch question requires extra processing
   # Can be tuned into generic multi response plotter
-  merch = df['merch'].str.split(',')
+  # separator string may change next year
+  merch = df['merch'].str.split(';')
   merch = merch.explode()
   merch = merch.str.strip()
+  print(merch)
   g_df = merch.groupby(merch).count()
   g_df.sort_values(inplace=True, axis=0, ascending=False)
 
@@ -170,59 +182,63 @@ def proc_merch(df):
 
   return fig
 
+def save_graph(figure, filename, dry_run=False ):
+    if dry_run:
+        return
+    figure.savefig(filename)
+    plt.close(figure)
+    return
+
 if __name__ == "__main__":
     args = proc_opts()
     plt.style.use("seaborn-darkgrid")
     sur_df = pd.read_csv(args.file)
     preprocess(sur_df)
 
-    #f = graph_bar(sur_df,'edu','Education')
-    #plt.show()
-    #sys.exit(1)
+    #f = graph_hist(sur_df,'fav_chap','favorite_chap','a')
     
     print("Plotting merch graph")
     f = proc_merch(sur_df)
-    if args.outdir and not args.dry_run:
-      f.savefig(args.outdir +"_merch_pie.png")
-      plt.close(f)
+    if args.outdir: 
+      save_graph(f,args.outdir +"_merch.png", args.dry_run)
+    plt.show()
+    sys.exit(1)
 
     print("Plotting age graph")
     f = graph_age_hist(sur_df)
-    if args.outdir and not args.dry_run:
-      f.savefig(args.outdir +"_age_hist.png")
-      plt.close(f)
+    if args.outdir:
+      save_graph(f,args.outdir +"_age_hist.png", args.dry_run)
 
     print("Plotting pie graphs")
     for col,title in pie_graphs:
       print("Plotting {} with title {}".format(col,title))
       f = graph_pie(sur_df,col,title)
-      if args.outdir and not args.dry_run:
-        f.savefig(args.outdir + col + "_pie.png")
-        plt.close(f)
+      if args.outdir:
+        save_graph(f, "_".join([args.outdir, col, "pie.png"]), args.dry_run)
 
-    print("Plotting bar graphs")
+    print("Plotting bar graphs unordered")
     for col,title in bar_graphs:
       print("Plotting {} with title {}".format(col,title))
-      f = graph_bar(sur_df,col,title)
-      if args.outdir and not args.dry_run:
-        f.savefig(args.outdir + col + "_bar.png")
-        plt.close(f)
+      f = graph_bar(sur_df, col, title ,1)
+      if args.outdir: 
+        name = "_".join([args.outdir, col, "bar.png"])
+        save_graph(f, name, args.dry_run)
 
     print("Plotting histograms")
     for col,title,label in histograms:
       print("Plotting {} with title {}".format(col,title))
       f = graph_hist(sur_df,col,title,label)
-      if args.outdir and not args.dry_run:
-        f.savefig(args.outdir + col + "_hist.png")
-        plt.close(f)
+      if args.outdir:
+        name = "_".join([args.outdir, col, "hist.png"])
+        save_graph(f, name, args.dry_run)
 
-    print("Plotting bar graphs ordered")
+    print("Plotting ordered bar graphs")
     for col,title in bar_order_keys:
       print("Plotting {} with title {}".format(col,title))
       f = graph_bar_order_key(sur_df,col,title)
-      if args.outdir and not args.dry_run:
-        f.savefig(args.outdir + col + "_ord.png")
-        plt.close(f)
+      if args.outdir:
+        name = "_".join([args.outdir, col, "ord.png"])
+        save_graph(f, name, args.dry_run)
 
-    if not args.outdir:
+    if not args.outdir or arg.dry_run:
       plt.show()
