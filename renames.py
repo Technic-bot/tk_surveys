@@ -10,7 +10,7 @@ raw_cols = (
     "Least Favorite Character",
     "Favorite race",
     "How long have you been following the comic? (in years)",
-    #"How long have you been part of r/Twokinds? (in years)",
+    "How long have you been part of r/Twokinds? (in years)",
     "How long have you been part of TKGC? (in years)",
     "Do you participate in other Twokinds fan communities (Discord, forums, etc)?",
     "In general, how long have you been a part of Twokinds fan communities? (In years)",
@@ -29,7 +29,7 @@ raw_cols = (
 
 cols = ["time", "age", "gender", "sex", "origin", "edu", "job"]
 cols += ["fav_char", "unfav_char", "fav_race"]
-cols += ["follow", "current_community_stay", "other_communities", "other_community_stay"]
+cols += ["follow", "current_community_stay", "current_community_stay",  "other_communities", "other_community_stay"]
 cols += ["furry"]
 cols += ["fav_chap", "unfav_chap", "patreon", "desired_patreon"]
 cols += ["sundays", "colors", "merch", "picarto", "commision", "fan_art"]
@@ -52,8 +52,10 @@ orig_renames = {
 char_renames = {
     "Madelyn (Maddie)": "Madelyn",
     "Mrs Nibbly": "Nibbly",
-    "Don’t have one": "None",
-    "I don't know": 'None'
+    "Don't have one": "None",
+    "I don't know": 'None',
+    "Every bad character is made specifically to be hated. I can't find a poorly written character.": "None",
+    "No se, todos me caen bien ": 'None'
 }
 
 

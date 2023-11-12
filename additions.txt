@@ -3,3 +3,6 @@ Add None for favorit and least favorite optuions
 Change Madelyn (Maddie) as Maddie
 Standarize community, discord/reddit naming
 
+Remove time following community.  At least other communities
+Remove feelings toward sunday sketches
+There is also a bug there in patreon grapsh
