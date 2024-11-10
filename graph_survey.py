@@ -16,10 +16,12 @@ from renames import (
     orig_renames,
     char_renames,
 )
-from graph_list import pie_graphs,bar_graphs, histograms,bar_order_keys
+from graph_list import pie_graphs, bar_cat, bar_num, histograms, bar_order_keys
+from datetime import datetime
 
 import pprint
 
+FIG_SIZE = (12,8)
 
 def proc_opts():
     parser = argparse.ArgumentParser(
@@ -38,7 +40,7 @@ def graph_time(df):
     time_df = df.groupby(grp).count()
     #print(time_df["age"].sum())
 
-    fig, axs = plt.subplots(figsize=(16,9))
+    fig, axs = plt.subplots(figsize=FIG_SIZE)
     axs.plot(time_df.index, time_df["age"])
 
     axs.set_title("Submissions")
@@ -46,22 +48,32 @@ def graph_time(df):
     axs.fmt_xdata = mdates.DateFormatter("%Y-%m-%d")
     return fig
 
+def add_footer(ax):
+    date = datetime.today().strftime('%Y-%m-%d')
+    msg = f"Made by Tec poll up to {date}"
+    ax.annotate(msg,
+            xy = (1.0, -0.1),
+            xycoords='axes fraction',
+            ha='right',
+            va="center",
+            fontsize=10)
+    return
 
 def graph_age_hist(df):
     min_age = df["age"].min()
     max_age = df["age"].max()
     print("Max age: {}".format(max_age))
     print("Min age: {}".format(min_age))
-    bins = np.arange(15, 70,5)
+    bins = np.arange(12, 70,2)
 
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.hist(df["age"], bins=bins, rwidth=0.75, align="mid", color="#72CDFE")
     ax.set_xticks(bins)
     ax.set_xticklabels(bins, rotation=25)
     ax.set_title("Age distribution")
     ax.set_xlabel("Age [years]")
     ax.set_ylabel("Count")
-
+    add_footer(ax)
     return fig
 
 
@@ -71,8 +83,8 @@ def graph_hist(df, col, title, label):
     bins = np.arange(min_col, max_col+1)
     #print(min_col, max_col+1)
 
-    fig, ax = plt.subplots(figsize=(16,9))
-    n = ax.hist(df[col], bins=bins, rwidth=0.8, align="left", color="#72CDFE")
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    n = ax.hist(df[col], bins=bins, rwidth=0.8, align="mid", color="#72CDFE")
     #print(df.groupby(col).count()['time'])
     ax.set_xticks(bins)
     ax.set_xticklabels(bins.astype(int), rotation=25)
@@ -80,12 +92,11 @@ def graph_hist(df, col, title, label):
     ax.set_title(title)
     ax.set_xlabel(label)
     ax.set_ylabel("Count")
+    add_footer(ax)
 
     return fig
 
-
-def graph_bar(df, col, title, other_n=2, crop=0):
-
+def prune(df, col, title, other_n, crop):
     if other_n:
         # Find and replace all instances with count < other_n
         # with 'Other'
@@ -97,10 +108,13 @@ def graph_bar(df, col, title, other_n=2, crop=0):
     if crop:
         # count instance per group crop anything wiuth at least "crop" times
         g_df = g_df[g_df["time"] > crop]
+    return g_df
 
+def graph_bar_categorical(df, col, title, other_n=2, crop=0):
+    g_df = prune(df, col, title, other_n, crop)
     g_df.sort_values(by="time", inplace=True, axis=0, ascending=False)
 
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
     x = np.arange(len(g_df.index))
     labs = g_df.index.str.wrap(12)
     ax.set_xticks(x)
@@ -108,9 +122,23 @@ def graph_bar(df, col, title, other_n=2, crop=0):
     ax.bar(labs, g_df["time"], color="#72CDFE")
     ax.set_title(title)
     ax.set_ylabel("Count")
+    add_footer(ax)
 
     return fig
 
+def graph_bar_numerical(df, col, title, other_n=2, crop=0, label=None):
+    g_df = prune(df, col, title, other_n, crop)
+
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
+    x = np.arange(max(g_df.index)+1)
+    ax.set_xticks(x)
+    ax.bar(g_df.index, g_df["time"], color="#72CDFE")
+    ax.set_title(title)
+    ax.set_ylabel("Count")
+    if label:
+        ax.set_xlabel(label)
+    add_footer(ax)
+    return fig
 
 def graph_bar_order_key(df, col, title, crop=0):
 
@@ -120,10 +148,11 @@ def graph_bar_order_key(df, col, title, crop=0):
       
     g_df.sort_index(inplace=True)
 
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.bar(g_df.index, g_df["time"], color="#F7941D")
     ax.set_title(title)
     ax.set_ylabel("Count")
+    add_footer(ax)
 
     return fig
 
@@ -137,12 +166,12 @@ def graph_pie(df, col, title, other_n=2):
         others = vc[vc < other_n]
         df.loc[df[col].isin(others.index), col] = "Other"
 
-    fig, ax = plt.subplots()
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=FIG_SIZE)
     g_df = df.groupby(col).count()
     labs = g_df.index.str.wrap(24)
     ax.pie(g_df["time"], labels=labs, autopct="%1.1f%%")
     ax.set_title(title)
+    add_footer(ax)
 
     return fig
 
@@ -150,13 +179,14 @@ def proc_merch(df):
   # Merch question requires extra processing
   # Can be tuned into generic multi response plotter
   # separator string may change next year
-  merch = df['merch'].str.split(';')
+  # it did
+  merch = df['merch'].str.split(',')
   merch = merch.explode()
   merch = merch.str.strip()
   g_df = merch.groupby(merch).count()
   g_df.sort_values(inplace=True, axis=0, ascending=False)
 
-  fig, ax = plt.subplots(figsize=(16,9))
+  fig, ax = plt.subplots(figsize=FIG_SIZE)
   x = np.arange(len(g_df.index))
   labs = g_df.index.str.wrap(12)
   ax.set_xticks(x)
@@ -178,35 +208,58 @@ def preprocess(df):
     # whitespace i hate you!
     df.rename(columns=lambda x: x.strip(), inplace=True)
     df.rename(columns=col_remap, inplace=True)
-    df["time"] = pd.to_datetime(sur_df["time"])
-    df["gender"].replace(gender_renames, inplace=True)
-    df["origin"].replace(orig_renames, inplace=True)
+    df["time"] = pd.to_datetime(sur_df["time"], dayfirst=True)
+    df["gender"] = df["gender"].replace(gender_renames)
+    df["origin"] = df["origin"].replace(orig_renames)
     df["fav_char"] = df["fav_char"].str.strip()
-    df["fav_char"].replace(char_renames, inplace=True)
+    df["fav_char"] = df["fav_char"].replace(char_renames)
     df["unfav_char"] = df["unfav_char"].str.strip()
-    df["unfav_char"].replace(char_renames, inplace=True)
+    df["unfav_char"] = df["unfav_char"].replace(char_renames)
     df["fav_race"] = df["fav_race"].str.replace(r" \(.*\)", "", regex=True)
     df["patreon"] = df["patreon"].str.replace(r" \(.*\)", "", regex=True)
     return
 
 if __name__ == "__main__":
     args = proc_opts()
-    plt.style.use("seaborn-darkgrid")
+    plt.style.use("seaborn-v0_8-darkgrid")
     sur_df = pd.read_csv(args.file)
     preprocess(sur_df)
-
-    #f = graph_hist(sur_df,'fav_chap','favorite_chap','a')
-    
-    print("Plotting merch graph")
-    f = proc_merch(sur_df)
-    if args.outdir: 
-      save_graph(f,args.outdir +"_merch.png", args.dry_run)
+    print(f"Got {len(sur_df)} entries")
 
     print("Plotting age graph")
     f = graph_age_hist(sur_df)
     if args.outdir:
       save_graph(f,args.outdir +"_age_hist.png", args.dry_run)
-    #sys.exit(1)
+
+    print("Plotting merch graph")
+    f = proc_merch(sur_df)
+    if args.outdir: 
+      save_graph(f,args.outdir +"_merch.png", args.dry_run)
+
+    #f = graph_hist(sur_df,'fav_chap','favorite_chap','a')
+    print("Plotting bar graphs numerical")
+    for col, title, label in bar_num:
+      print("Plotting {} with title {}".format(col,title))
+      f = graph_bar_numerical(sur_df, col, title ,1, label=label)
+      if args.outdir: 
+        name = "_".join([args.outdir, col, "numbar.png"])
+        save_graph(f, name, args.dry_run)
+    
+    print("Plotting bar graphs categorical")
+    for col, title in bar_cat:
+      print("Plotting {} with title {}".format(col,title))
+      f = graph_bar_categorical(sur_df, col, title ,1)
+      if args.outdir: 
+        name = "_".join([args.outdir, col, "catbar.png"])
+        save_graph(f, name, args.dry_run)
+    
+    print("Plotting histograms")
+    for col,title in histograms:
+      print("Plotting {} with title {}".format(col,title))
+      f = graph_hist(sur_df,col,title,label)
+      if args.outdir:
+        name = "_".join([args.outdir, col, "hist.png"])
+        save_graph(f, name, args.dry_run)
 
     print("Plotting pie graphs")
     for col,title in pie_graphs:
@@ -214,22 +267,6 @@ if __name__ == "__main__":
       f = graph_pie(sur_df,col,title)
       if args.outdir:
         save_graph(f, "_".join([args.outdir, col, "pie.png"]), args.dry_run)
-
-    print("Plotting bar graphs unordered")
-    for col,title in bar_graphs:
-      print("Plotting {} with title {}".format(col,title))
-      f = graph_bar(sur_df, col, title ,1)
-      if args.outdir: 
-        name = "_".join([args.outdir, col, "bar.png"])
-        save_graph(f, name, args.dry_run)
-
-    print("Plotting histograms")
-    for col,title,label in histograms:
-      print("Plotting {} with title {}".format(col,title))
-      f = graph_hist(sur_df,col,title,label)
-      if args.outdir:
-        name = "_".join([args.outdir, col, "hist.png"])
-        save_graph(f, name, args.dry_run)
 
     print("Plotting ordered bar graphs")
     for col,title in bar_order_keys:
@@ -239,5 +276,6 @@ if __name__ == "__main__":
         name = "_".join([args.outdir, col, "ord.png"])
         save_graph(f, name, args.dry_run)
 
-    if not args.outdir or args.dry_run:
+    if not args.outdir and not args.dry_run:
       plt.show()
+    sys.exit(1)

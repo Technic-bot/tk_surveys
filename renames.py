@@ -38,7 +38,7 @@ col_remap = dict(zip(raw_cols, cols))
 
 extra_maps = {
   'Do you participate in other Twokinds fan communities (Discord server, reddit, forums, etc)?' : 'other_comms',
-  "How long have you been part of this subreddit? (in years)" : "reddit"
+  "How long have you been part of Twokinds Group Chat? (in years)" : "tkgc"
   }
 
 col_remap.update(extra_maps)
