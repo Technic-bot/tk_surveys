@@ -100,3 +100,19 @@ survey = [
                'other than Thomas Fischbach?',
         'title': 'Have you ever commisioned Twokinds art?',
         'type': 'pie'}]
+
+gender_renames = {"Male": "Cisgender Male"}
+
+orig_renames = {
+    "Latin America and the Caribbean": "Latin America",
+    "Oceania (Australia, New Zealand, Pacific Islands)": "Oceania",
+}
+
+char_renames = {
+    "Madelyn (Maddie)": "Madelyn",
+    "Mrs Nibbly": "Nibbly",
+    "Don't have one": "None",
+    "I don't know": 'None',
+    "Every bad character is made specifically to be hated. I can't find a poorly written character.": "None",
+    "No se, todos me caen bien ": 'None'
+}
