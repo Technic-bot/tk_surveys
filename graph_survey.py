@@ -16,12 +16,22 @@ from renames import (
     orig_renames,
     char_renames,
 )
-from graph_list import pie_graphs, bar_cat, bar_num, histograms, bar_order_keys
+
 from datetime import datetime
 
 import pprint
 
 FIG_SIZE = (12,8)
+
+from graph_list import pie_graphs, bar_cat, bar_num, histograms, bar_order_keys
+from survey_config import survey
+
+col_remap = { s['raw']: s['name'] for s in survey}
+pie_graphs = [entry for entry in survey if entry['type'] == 'pie']
+bar_cat = [entry for entry in survey if entry['type'] == 'bar_cat']
+bar_num = [entry for entry in survey if entry['type'] == 'bar_num']
+histograms = [entry for entry in survey if entry['type'] == 'histograms']
+bar_order_keys = [entry for entry in survey if entry['type'] == 'bar_order_keys']
 
 def proc_opts():
     parser = argparse.ArgumentParser(
@@ -106,7 +116,7 @@ def prune(df, col, title, other_n, crop):
 
     g_df = df.groupby(col).count()
     if crop:
-        # count instance per group crop anything wiuth at least "crop" times
+        # count instance per group crop anything with at least "crop" times
         g_df = g_df[g_df["time"] > crop]
     return g_df
 
@@ -126,7 +136,7 @@ def graph_bar_categorical(df, col, title, other_n=2, crop=0):
 
     return fig
 
-def graph_bar_numerical(df, col, title, other_n=2, crop=0, label=None):
+def graph_bar_numerical(df, col, title, other_n=0, crop=0, label=None):
     g_df = prune(df, col, title, other_n, crop)
 
     fig, ax = plt.subplots(figsize=FIG_SIZE)
@@ -208,6 +218,7 @@ def preprocess(df):
     # whitespace i hate you!
     df.rename(columns=lambda x: x.strip(), inplace=True)
     df.rename(columns=col_remap, inplace=True)
+    # pprint.pprint(col_remap)
     df["time"] = pd.to_datetime(sur_df["time"], dayfirst=True)
     df["gender"] = df["gender"].replace(gender_renames)
     df["origin"] = df["origin"].replace(orig_renames)
@@ -229,47 +240,61 @@ if __name__ == "__main__":
     print("Plotting age graph")
     f = graph_age_hist(sur_df)
     if args.outdir:
-      save_graph(f,args.outdir +"_age_hist.png", args.dry_run)
+      name = args.outdir +"_age_dist_condensed.png"
+      print(name)
+      save_graph(f,name, args.dry_run)
 
     print("Plotting merch graph")
     f = proc_merch(sur_df)
     if args.outdir: 
       save_graph(f,args.outdir +"_merch.png", args.dry_run)
 
-    #f = graph_hist(sur_df,'fav_chap','favorite_chap','a')
     print("Plotting bar graphs numerical")
-    for col, title, label in bar_num:
-      print("Plotting {} with title {}".format(col,title))
-      f = graph_bar_numerical(sur_df, col, title ,1, label=label)
+    for graph in bar_num:
+      col = graph['name']
+      title = graph['title']
+      label = graph['xaxis']
+      tp = graph['type']
+      print(f"Plotting {col} with title {title} as {tp}")
+      f = graph_bar_numerical(sur_df, col, title ,0, label=label)
       if args.outdir: 
         name = "_".join([args.outdir, col, "numbar.png"])
         save_graph(f, name, args.dry_run)
     
     print("Plotting bar graphs categorical")
-    for col, title in bar_cat:
-      print("Plotting {} with title {}".format(col,title))
+    for graph in bar_cat:
+      col = graph['name']
+      title = graph['title']
+      print(f"Plotting {col} with title {title}")
       f = graph_bar_categorical(sur_df, col, title ,1)
       if args.outdir: 
         name = "_".join([args.outdir, col, "catbar.png"])
         save_graph(f, name, args.dry_run)
     
     print("Plotting histograms")
-    for col,title in histograms:
-      print("Plotting {} with title {}".format(col,title))
-      f = graph_hist(sur_df,col,title,label)
+    for col, title, lab in histograms:
+      col = graph['name']
+      title = graph['title']
+      label = graph['yaxis']
+      print(f"Plotting {col} with title {title}")
+      f = graph_hist(sur_df, col, title, lab )
       if args.outdir:
         name = "_".join([args.outdir, col, "hist.png"])
         save_graph(f, name, args.dry_run)
 
     print("Plotting pie graphs")
-    for col,title in pie_graphs:
-      print("Plotting {} with title {}".format(col,title))
+    for graph in pie_graphs:
+      col = graph['name']
+      title = graph['title']
+      print(f"Plotting {col} with title {title}")
       f = graph_pie(sur_df,col,title)
       if args.outdir:
         save_graph(f, "_".join([args.outdir, col, "pie.png"]), args.dry_run)
 
     print("Plotting ordered bar graphs")
-    for col,title in bar_order_keys:
+    for graph in bar_order_keys:
+      col = graph['name']
+      title = graph['title']
       print("Plotting {} with title {}".format(col,title))
       f = graph_bar_order_key(sur_df,col,title)
       if args.outdir:
