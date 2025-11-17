@@ -253,7 +253,7 @@ if __name__ == "__main__":
     for graph in bar_num:
       col = graph['name']
       title = graph['title']
-      label = graph['xaxis']
+      label = graph['label']
       tp = graph['type']
       print(f"Plotting {col} with title {title} as {tp}")
       f = graph_bar_numerical(sur_df, col, title ,0, label=label)
@@ -275,7 +275,7 @@ if __name__ == "__main__":
     for col, title, lab in histograms:
       col = graph['name']
       title = graph['title']
-      label = graph['yaxis']
+      label = graph['label']
       print(f"Plotting {col} with title {title}")
       f = graph_hist(sur_df, col, title, lab )
       if args.outdir:

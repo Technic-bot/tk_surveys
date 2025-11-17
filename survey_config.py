@@ -6,7 +6,7 @@ survey = [
         'raw': 'Age',
         'title': 'Age Distribution',
         'type': 'histogram',
-        'yaxis': 'years'},
+        'label': 'years'},
     {   'name': 'gender',
         'raw': 'Gender Identity',
         'title': 'Gender Distribution',
@@ -43,12 +43,16 @@ survey = [
         'raw': 'How long have you been following the comic? (in years)',
         'title': 'Time following Twokinds',
         'type': 'histogram',
-        'yaxis': 'years'},
+        'label': 'years'},
+    {   'name': 'intro',
+        'raw': "What got you into Twokinds?",
+        'title' "What got you into Twokinds?",
+        'type': 'bar_cat'},
     {   'name': 'current_community_stay',
         'raw': 'How long have you been part of TKGC? (in years)',
         'title': 'Time following r/twokinds',
         'type': 'histogram',
-        'yaxis': 'years'},
+        'label': 'years'},
     {   'name': 'other_communities',
         'raw': 'Do you participate in other Twokinds fan communities (Discord, '
                'forums, etc)?',
@@ -62,12 +66,12 @@ survey = [
         'raw': 'Favorite chapter of the comic?',
         'title': 'Favorite Chapter',
         'type': 'bar_num',
-        'xaxis': 'chapter'},
+        'label': 'chapter'},
     {   'name': 'unfav_chap',
         'raw': 'Least Favorite chapter of the comic?',
         'title': 'Least Favorite Chapter',
         'type': 'bar_num',
-        'xaxis': 'chapter'},
+        'label': 'chapter'},
     {   'name': 'patreon',
         'raw': "If you are a patron of Thomas Fischbach's Patreon, what tier "
                'are you subscribed to?',
@@ -99,7 +103,13 @@ survey = [
         'raw': 'Have you ever commissioned Twokinds-related art from artists '
                'other than Thomas Fischbach?',
         'title': 'Have you ever commisioned Twokinds art?',
-        'type': 'pie'}]
+        'type': 'pie'},
+    {   'name': 'surveys_taken',
+        'raw': 'How many of my surveys have you taken including this?',
+        'title': "Prior Participation",
+        'type': 'histogram',
+        'label': 'number' }
+        ]
 
 gender_renames = {"Male": "Cisgender Male"}
 
