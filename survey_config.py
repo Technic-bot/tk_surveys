@@ -5,7 +5,7 @@ survey = [
     {   'name': 'age',
         'raw': 'Age',
         'title': 'Age Distribution',
-        'type': 'histogram',
+        'type': None, # Handled separately
         'label': 'years'},
     {   'name': 'gender',
         'raw': 'Gender Identity',
@@ -46,10 +46,11 @@ survey = [
         'label': 'years'},
     {   'name': 'intro',
         'raw': "What got you into Twokinds?",
-        'title' "What got you into Twokinds?",
-        'type': 'bar_cat'},
+        'title': "What got you into Twokinds?",
+        'type': None # Handled separately
+    },
     {   'name': 'current_community_stay',
-        'raw': 'How long have you been part of TKGC? (in years)',
+        'raw': 'How long have you been part of this community? (in years)',
         'title': 'Time following r/twokinds',
         'type': 'histogram',
         'label': 'years'},

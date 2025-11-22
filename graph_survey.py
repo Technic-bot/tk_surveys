@@ -30,7 +30,7 @@ col_remap = { s['raw']: s['name'] for s in survey}
 pie_graphs = [entry for entry in survey if entry['type'] == 'pie']
 bar_cat = [entry for entry in survey if entry['type'] == 'bar_cat']
 bar_num = [entry for entry in survey if entry['type'] == 'bar_num']
-histograms = [entry for entry in survey if entry['type'] == 'histograms']
+histograms = [entry for entry in survey if entry['type'] == 'histogram']
 bar_order_keys = [entry for entry in survey if entry['type'] == 'bar_order_keys']
 
 def proc_opts():
@@ -62,7 +62,7 @@ def add_footer(ax):
     date = datetime.today().strftime('%Y-%m-%d')
     msg = f"Made by Tec poll up to {date}"
     ax.annotate(msg,
-            xy = (1.0, -0.1),
+            xy = (1.0, 1.1),
             xycoords='axes fraction',
             ha='right',
             va="center",
@@ -228,6 +228,7 @@ def preprocess(df):
     df["unfav_char"] = df["unfav_char"].replace(char_renames)
     df["fav_race"] = df["fav_race"].str.replace(r" \(.*\)", "", regex=True)
     df["patreon"] = df["patreon"].str.replace(r" \(.*\)", "", regex=True)
+    df["intro"] = df["intro"].str.replace(r" \(.*\)", "", regex=True)
     return
 
 if __name__ == "__main__":
@@ -249,13 +250,19 @@ if __name__ == "__main__":
     if args.outdir: 
       save_graph(f,args.outdir +"_merch.png", args.dry_run)
 
+    print("Plotting What got you into Twokinds?")
+    f = graph_bar_categorical(
+        sur_df, 'intro', "What got you into Twokinds?",2)
+    if args.outdir: 
+      save_graph(f,args.outdir +"_intro.png", args.dry_run)
+
     print("Plotting bar graphs numerical")
     for graph in bar_num:
       col = graph['name']
       title = graph['title']
       label = graph['label']
       tp = graph['type']
-      print(f"Plotting {col} with title {title} as {tp}")
+      print(f"\tPlotting {col} with title {title} as {tp}")
       f = graph_bar_numerical(sur_df, col, title ,0, label=label)
       if args.outdir: 
         name = "_".join([args.outdir, col, "numbar.png"])
@@ -265,19 +272,19 @@ if __name__ == "__main__":
     for graph in bar_cat:
       col = graph['name']
       title = graph['title']
-      print(f"Plotting {col} with title {title}")
+      print(f"\tPlotting {col} with title {title}")
       f = graph_bar_categorical(sur_df, col, title ,1)
       if args.outdir: 
         name = "_".join([args.outdir, col, "catbar.png"])
         save_graph(f, name, args.dry_run)
     
     print("Plotting histograms")
-    for col, title, lab in histograms:
+    for graph in histograms:
       col = graph['name']
       title = graph['title']
       label = graph['label']
-      print(f"Plotting {col} with title {title}")
-      f = graph_hist(sur_df, col, title, lab )
+      print(f"\tPlotting {col} with title {title}")
+      f = graph_hist(sur_df, col, title, label )
       if args.outdir:
         name = "_".join([args.outdir, col, "hist.png"])
         save_graph(f, name, args.dry_run)
@@ -286,7 +293,7 @@ if __name__ == "__main__":
     for graph in pie_graphs:
       col = graph['name']
       title = graph['title']
-      print(f"Plotting {col} with title {title}")
+      print(f"\tPlotting {col} with title {title}")
       f = graph_pie(sur_df,col,title)
       if args.outdir:
         save_graph(f, "_".join([args.outdir, col, "pie.png"]), args.dry_run)
@@ -295,7 +302,7 @@ if __name__ == "__main__":
     for graph in bar_order_keys:
       col = graph['name']
       title = graph['title']
-      print("Plotting {} with title {}".format(col,title))
+      print("\tPlotting {} with title {}".format(col,title))
       f = graph_bar_order_key(sur_df,col,title)
       if args.outdir:
         name = "_".join([args.outdir, col, "ord.png"])
