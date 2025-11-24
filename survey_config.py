@@ -90,7 +90,8 @@ survey = [
         'type': 'bar_order_keys'},
     {   'name': 'merch',
         'raw': 'Do you own any official Twokinds merchandise?',
-        'type': None },
+        'type': None 
+    },
     {   'name': 'picarto',
         'raw': 'Do you follow Tom on Picarto?',
         'title': 'Do you follow Tom on Picarto?',
@@ -109,8 +110,45 @@ survey = [
         'raw': 'How many of my surveys have you taken including this?',
         'title': "Prior Participation",
         'type': 'histogram',
-        'label': 'number' }
-        ]
+        'label': 'number' },
+    # Sentiment analysis questions
+    { 
+        'raw': "What do you like the most about Twokinds?",
+        'name' : 'most_liked',
+        'type': 'sentiment' 
+    },
+    { 
+        'raw': "What keeps you coming back to Twokinds and its community?",
+        'name': 'retention',
+        'type': 'sentiment' 
+    },
+    {   
+        'raw': "How would you describe Twokinds in one word?",
+        'name' : "one_word",
+        'type': 'sentiment' 
+    },
+    {
+        'raw': "How would you introduce someone new to Twokinds?",
+        'name': 'introducing',
+        'type': 'sentiment' 
+    },
+    {
+        'raw': "What do you think of Twokinds and its community for this year?",
+        'name': 'community_opinion',
+        'type': 'sentiment' 
+    },
+    {
+        'raw': "Fill it the blank: It is not Twokinds until someone _____!",
+        'name': 'filling',
+        'type': 'sentiment' 
+    },
+    { 
+        'raw': "What other questions would you like to see next time?",
+        'name': "questions",
+        'type': 'sentiment' 
+    }
+        
+]
 
 gender_renames = {"Male": "Cisgender Male"}
 

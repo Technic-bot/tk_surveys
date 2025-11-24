@@ -23,7 +23,6 @@ import pprint
 
 FIG_SIZE = (12,8)
 
-from graph_list import pie_graphs, bar_cat, bar_num, histograms, bar_order_keys
 from survey_config import survey
 
 col_remap = { s['raw']: s['name'] for s in survey}
