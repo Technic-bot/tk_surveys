@@ -3,8 +3,13 @@ import pprint
 import csv
 
 import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+
 from transformers import pipeline
 from sentence_transformers import SentenceTransformer   
+
+import umap
 
 from survey_config import survey
 
@@ -18,13 +23,21 @@ def proc_opts():
         epilog="Made by Tec bot with ❤️ ",
     )
     args.add_argument("file", help="Input pandas file")
-    args.add_argument("output", help="Output dir")
+    args.add_argument("embeds_dir", help="Output dir for embeddings")
+    args.add_argument("sentiment_dir", help="Output dir for sentiment analysys")
+    args.add_argument("--skip-sentiment",
+            help="Skip sentiment analysis portion",
+            action='store_true')
+    args.add_argument("--skip-embedding",
+            help="Skip embbeding analysis portion",
+            action='store_true')
     return args.parse_args()
 
 class SurveySentimentAnalysis():
-    def __init__(self, infile, outdir, questions):
+    def __init__(self, infile, embeds_dir, sentiment_dir, questions):
         self.infile = infile
-        self.outdir = outdir
+        self.embeds_dir = embeds_dir
+        self.sentiment_dir = sentiment_dir
         self.survey = pd.read_csv(self.infile)
         self.questions = questions
         self.preprocess()
@@ -38,6 +51,7 @@ class SurveySentimentAnalysis():
                 model="tabularisai/multilingual-sentiment-analysis")
         self.embedder = SentenceTransformer(
                 'sentence-transformers/paraphrase-mpnet-base-v2') 
+        self.reducer = umap.UMAP()
 
     def preprocess(self ):
         self.survey = self.survey.rename(columns=lambda x: x.strip())
@@ -70,36 +84,52 @@ class SurveySentimentAnalysis():
         df = df.sort_values(by=['label', 'score'], ascending=False)
         df.to_csv(self.outdir + "sentiment_"+ col_remap[question] + ".csv", index=False)
         # Emit only responses in order for markdowns
-        df['response'].to_markdown(self.outdir + "sentiment_"+ col_remap[question] + ".md", index=False)
+        df['response'].to_markdown(self.sentiment_dir + "sentiment_"+ col_remap[question] + ".md", index=False)
         return df.to_dict(orient="records")
 
     def embedding_analysis(self):
         for q in self.questions:
-            print(f"Embedding analysis for {q}")
             responses = self.survey[q].dropna().to_list()
-            embeddings = self.embedder.encode(responses)
-            analysis = []
-            for r, e in zip(responses, embeddings):
-                row = { 'response' : r,
-                        'embedding' : e}
-                analysis.append(row)
+            print(f"Embedding analysis for {q}")
+            embeddings = self.embedder.encode(responses, convert_to_numpy=True)
+            print("Running UMAP")
+            redu_embeds = self.reducer.fit_transform(embeddings)
+            df = pd.DataFrame(responses, columns=['response'])
+            df['embeddings'] = list(embeddings)
+            df['umapx'] = list(redu_embeds[:,0])
+            df['umapy'] = list(redu_embeds[:,1])
 
-            self.embeddings[q] = analysis
-            self.persist_embeddings(q, analysis)
+            self.embeddings[q] = df
+            # self.persist_embeddings(q, analysis)
 
-    def persist_embeddings(self, question, analysis):
-        filename = self.outdir + "embeddings_"+ col_remap[question] + ".csv"
-        with open(filename, 'w') as emb_file:
-            headers = ['response', 'embedding']
-            writer = csv.DictWriter(emb_file, fieldnames=headers)
-            writer.writeheader()
-            writer.writerows(analysis)
+    def persist_embeddings(self, embed_df):
+        filename = self.embed_dir + "embeddings_"+ col_remap[question] + ".parquet"
+        df.to_parquet(filename) 
         return
-            
+
+    def graph_embeddings(self):
+        for q, df in self.embeddings.items():
+            print(f"Graphing embeddings for {q}")
+            fig, ax = plt.subplots(
+                    figsize=(19, 10)
+                    )
+        
+            ax.scatter(df['umapx'], df['umapy'])
+            ax.set_title(f'UMAP reduction of response embeddings for:\n {q}')
+            break
+            # fig.legend(loc='upper center')
+        return fig
+
 
 if __name__=="__main__":
     opts = proc_opts()
-    ssa = SurveySentimentAnalysis(opts.file, opts.output, sentiment_cols)
-    ssa.sentiment_analysis()
-    ssa.embedding_analysis()
+    ssa = SurveySentimentAnalysis(
+            opts.file, opts.embeds_dir, opts.sentiment_dir,
+            sentiment_cols)
+    if not opts.skip_sentiment:
+        ssa.sentiment_analysis()
+    if not opts.skip_embedding:
+        ssa.embedding_analysis()
+        ssa.graph_embeddings()
+        plt.show()
 
