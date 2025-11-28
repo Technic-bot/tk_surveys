@@ -51,7 +51,7 @@ survey = [
     },
     {   'name': 'current_community_stay',
         'raw': 'How long have you been part of this community? (in years)',
-        'title': 'Time following r/twokinds',
+        'title': 'Time in this community',
         'type': 'histogram',
         'label': 'years'},
     {   'name': 'other_communities',
