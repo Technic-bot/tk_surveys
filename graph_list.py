@@ -26,8 +26,8 @@ bar_cat = (
 histograms = (
   ("age","Age Distribution",'years'),
   ('follow','Time following Twokinds','years'),
-  ('current_community_stay','Time in TKGC','years'),
-  #('current_community_stay','Time following r/twokinds','years')
+  #('current_community_stay','Time in TKGC','years')
+  ('current_community_stay','Time following r/twokinds','years')
 #  ('other_community_stay','Time spent on Tk communities in general','years'),
 )
 
