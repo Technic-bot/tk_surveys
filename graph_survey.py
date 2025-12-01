@@ -73,7 +73,7 @@ def graph_age_hist(df):
     max_age = df["age"].max()
     print("Max age: {}".format(max_age))
     print("Min age: {}".format(min_age))
-    bins = np.arange(12, 70,2)
+    bins = np.arange(12, 80,2)
 
     fig, ax = plt.subplots(figsize=FIG_SIZE)
     ax.hist(df["age"], bins=bins, rwidth=0.75, align="mid", color="#72CDFE")
