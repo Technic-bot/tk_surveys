@@ -64,13 +64,19 @@ But in this case i think i could have gotten it to work had i spent enough time 
 Either way you can see all the responses for each question organized here (these are links) plus some of my own thoughts on the responses.
 
 ### [What do you think of Twokinds and its community for this year?](../../../results/2025/tkgc/sentiments/sentiment_community_opinion.md)
+So in general seems like people are very fond of the server. As this response  `The people in the TKGC community have made me very very happy <3` summarizes. People also seem like that Tom has increased his thoroughput this year as this surveyee poinst out: `The number of pages being posted have picked up and the community has been fun to hang out with.`. There is however some people considering that Tom should work more on the comic (`Tom should lock in on the comic, not sketches.`) and there were a couple comments about the community being a bit hard to navigate. And of course as any survey lots of people were ambivalent.
 
 ### [Fill it the blank: It is not Twokinds until someone _____!](../../../results/2025/tkgc/sentiments/sentiment_filling.md)
+Unsurprisingly most of you decided that it is not Twokinds until someone `Gets Genderbent` or is transformed one way or the other.
 
 ### [How would you introduce someone new to Twokinds?](../../../results/2025/tkgc/sentiments/sentiment_introducing.md)
+Most people agreed that the best idea to introduce someone to twokinds is to show them recent sketches or colored art before sending them to page 1: `Id first show them the Sunday sketches before the comic so they understand that the art style won’t stay… rough.` Personally I do find his early style to be charming and honestly better than more than 80% of 15 year olds then and today could make. But also understand some people won't feel like going through his early drawings regardless. And a couple decide to go straight to the money shot `Butts` which honestly points for the honesty.
 
 ### [What do you like the most about Twokinds?](../../../results/2025/tkgc/sentiments/sentiment_most_liked.md)
+Of course a lot of people like `The art` the most and after all Tom is a visual artist. But a lot of people also commented they like the characterization and how they can connecte with the characters one way or another: `A lot of things, but in general. How it makes me feel, I feel like I am with the characters in the good and the bad moments.` I have always said that the best part of the comics are its characters. What I did not expect was seeing several people commenting on Tom growth as an artist as what they like exemplified by this response: `Evolution of Tom’s work as a writer and artist`
 
 ### [How would you describe Twokinds in one word?](../../../results/2025/tkgc/sentiments/sentiment_one_word.md)
+There was quite the split here some described twokinds as mostly horni: `Adolescent`, `Softcore`, `Butts` which i disagree but i understand where they are coming from. But a lot of people also find it `interesting` `earnest` and `charming` which to be fair i do think Tom puts all his heart into this.
 
 ### [What keeps you coming back to Twokinds and its community?](../../../results/2025/tkgc/sentiments/sentiment_retention.md)
+It seems for a lot of people not only they are invested in the comic but they have also found a little corner of the internet to call home here: `Other than how awesome the comic is? The group chat is full of so many awesome furs that I enjoy hanging out with!` and `For the comic, the story. For the community, the incredibly nice people that are part of it.` show it
