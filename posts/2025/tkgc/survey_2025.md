@@ -24,6 +24,9 @@ As usual some basic demographic data on who we are and where we are in life and 
 ## Twokinds questions
 
 Our second traditional set of questions on topic regarding for favorites of the comics and not so favorites. Only outlier this year is asking how you got into twokinds
+
+I did provide an 'other' field in some questions and some people gave quite the long comment there, left it on the graphs since i think it is a bit funny and is a bit annoying to remove
+
 ![Favorite Character](../../../graphs/2025/tkgc/tkgc_fav_char_catbar.png)
 ![Least Favorite Character](../../../graphs/2025/tkgc/tkgc_unfav_char_catbar.png)
 ![Favorite Race](../../../graphs/2025/tkgc/tkgc_fav_race_catbar.png)
@@ -44,9 +47,9 @@ Our second traditional set of questions on topic regarding for favorites of the 
 
 ## Free form questions
 
-Ok this is the interesting part. We had around 52 responses and with 8 questions it does become impractical to read every one of them and come with something up myself. And had been waiting for a great excuse to try to do some natural language procession  on something interesting. 
+Ok this is the interesting part. We had around 52 responses and with 8 questions it does become impractical to read every one of them and come with something up myself. And had been waiting for a great excuse to try to do some natural language procession on something interesting. 
 
-What i wanted to try was at first doing some sentiment analysis to gauge the general attitude in the responses, classifying them into positive negative or neutral for this i used a text classification model based on hugging face transformers in particular i tried with [this multilingia sentiment analysis system](https://huggingface.co/tabularisai/multilingual-sentiment-analysis)
+What i wanted to try was at first doing some sentiment analysis to gauge the general attitude in the responses, classifying them into positive negative or neutral for this i used a text classification model based on hugging face transformers in particular i tried with [this multilingual sentiment analysis system](https://huggingface.co/tabularisai/multilingual-sentiment-analysis)
 
 Next i wanted to extract some common themes from the questions in particular i have some background in clusterization algorithms so wanted to try something like that. In this case we take the responses and transform them into a high dimensional vector that distills the content into a hopeuflly continuous and metric high dimensional space, this process is known as embedding. Andthis can be done using the [sentence transformers](https://huggingface.co/sentence-transformers/paraphrase-mpnet-base-v2) framework also by huggingface. Then we can run stuff like [HDBSCAN](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.HDBSCAN.html) to cluster it into semantically similar questions. 
 
@@ -56,11 +59,11 @@ For embedding analysis it was worse as the clustering did not return anything. H
 
 ![hdbscan graph](../../../results/2025/tkgc/embeddings/community_opinion.png)
 
-But in this case i think i could have gotten it to work had i spent enough time choosen the appropiate sentence transformer and tunning HDBscan hyperparamters. But that is way outside the scope of this and honestly i want to publish the results already
+But in this case i think i could have gotten it to work had i spent enough time choosing the appropiate sentence transformer and tunning HDBscan hyperparameters or had i simply got more responses. But that is way outside the scope of this and honestly i want to publish the results already
 
-Either way you can see all the responses for each question organized here:
+Either way you can see all the responses for each question organized here (these are links) plus some of my own thoughts on the responses.
 
-### [What do you think of Twokinds and its community for this year?](../../../results/2025/tkgc/sentiments/sentiment_filling.md)
+### [What do you think of Twokinds and its community for this year?](../../../results/2025/tkgc/sentiments/sentiment_community_opinion.md)
 
 ### [Fill it the blank: It is not Twokinds until someone _____!](../../../results/2025/tkgc/sentiments/sentiment_filling.md)
 
@@ -70,3 +73,4 @@ Either way you can see all the responses for each question organized here:
 
 ### [How would you describe Twokinds in one word?](../../../results/2025/tkgc/sentiments/sentiment_one_word.md)
 
+### [What keeps you coming back to Twokinds and its community?](../../../results/2025/tkgc/sentiments/sentiment_retention.md)
