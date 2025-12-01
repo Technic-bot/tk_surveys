@@ -1,4 +1,4 @@
-# Twokinds Group Chat survey 2025
+# r/Twokinds survey 2025
 
 Hello and welcome to another edition of our now traditional yearly survey!
 
